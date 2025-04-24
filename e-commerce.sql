@@ -1,25 +1,44 @@
--- Product Image Table
-CREATE TABLE product_image (
+-- Attribute Type Table
+CREATE TABLE attribute_type (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT NOT NULL,
-    image_url VARCHAR(255) NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product(id)
+    type_name VARCHAR(50) NOT NULL
 );
-SELECT * FROM product_image;
 
--- Color Table
-CREATE TABLE color (
+INSERT INTO attribute_type (type_name) VALUES 
+('Text'),
+('Number'),
+('Boolean');
+
+-- Attribute Category Table
+CREATE TABLE attribute_category (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(100) NOT NULL
 );
-SELECT * FROM color;
+
+INSERT INTO attribute_category (name) VALUES 
+('Physical'),
+('Technical');
+
+-- Brand Table
+CREATE TABLE brand (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+INSERT INTO brand (name) VALUES 
+('Nike'),
+('Samsung'),
+('Apple');
 
 -- Product Category Table
 CREATE TABLE product_category (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
-SELECT * FROM product_category;
+
+INSERT INTO product_category (name) VALUES 
+('Clothing'),
+('Electronics');
 
 -- Product Table
 CREATE TABLE product (
@@ -31,24 +50,46 @@ CREATE TABLE product (
     FOREIGN KEY (brand_id) REFERENCES brand(id),
     FOREIGN KEY (product_category_id) REFERENCES product_category(id)
 );
-SELECT * FROM product;
 
--- Product Item Table
-CREATE TABLE product_item (
+INSERT INTO product (name, brand_id, product_category_id, base_price) VALUES 
+('Running Shoes', 1, 1, 79.99),
+('Galaxy S21', 2, 2, 699.99),
+('iPhone 14', 3, 2, 999.99);
+
+-- Color Table
+CREATE TABLE color (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_variation_id INT NOT NULL,
-    stock_quantity INT NOT NULL,
-    price DECIMAL(10,2),
-    FOREIGN KEY (product_variation_id) REFERENCES product_variation(id)
+    name VARCHAR(50) NOT NULL
 );
-SELECT * FROM product_item;
 
--- Brand Table
-CREATE TABLE brand (
+INSERT INTO color (name) VALUES 
+('Red'),
+('Blue'),
+('Black');
+
+-- Size Category Table
+CREATE TABLE size_category (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
-SELECT * FROM brand;
+
+INSERT INTO size_category (name) VALUES 
+('Clothing Sizes'),
+('Shoe Sizes');
+
+-- Size Option Table
+CREATE TABLE size_option (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    size_category_id INT NOT NULL,
+    size_value VARCHAR(20) NOT NULL,
+    FOREIGN KEY (size_category_id) REFERENCES size_category(id)
+);
+
+INSERT INTO size_option (size_category_id, size_value) VALUES 
+(1, 'S'),
+(1, 'M'),
+(2, '42'),
+(2, '44');
 
 -- Product Variation Table
 CREATE TABLE product_variation (
@@ -60,23 +101,36 @@ CREATE TABLE product_variation (
     FOREIGN KEY (color_id) REFERENCES color(id),
     FOREIGN KEY (size_option_id) REFERENCES size_option(id)
 );
-SELECT * FROM product_variation;
 
--- Size Category Table
-CREATE TABLE size_category (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
-SELECT * FROM size_category;
+INSERT INTO product_variation (product_id, color_id, size_option_id) VALUES 
+(1, 1, 3),
+(1, 2, 4);
 
--- Size Option Table
-CREATE TABLE size_option (
+-- Product Item Table
+CREATE TABLE product_item (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    size_category_id INT NOT NULL,
-    size_value VARCHAR(20) NOT NULL,
-    FOREIGN KEY (size_category_id) REFERENCES size_category(id)
+    product_variation_id INT NOT NULL,
+    stock_quantity INT NOT NULL,
+    price DECIMAL(10,2),
+    FOREIGN KEY (product_variation_id) REFERENCES product_variation(id)
 );
-SELECT * FROM size_option;
+
+INSERT INTO product_item (product_variation_id, stock_quantity, price) VALUES 
+(1, 50, 89.99),
+(2, 30, 89.99);
+
+-- Product Image Table
+CREATE TABLE product_image (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);
+
+INSERT INTO product_image (product_id, image_url) VALUES 
+(1, 'images/shoes1.png'),
+(2, 'images/galaxy_s21.png'),
+(3, 'images/iphone14.png');
 
 -- Product Attribute Table
 CREATE TABLE product_attribute (
@@ -89,18 +143,7 @@ CREATE TABLE product_attribute (
     FOREIGN KEY (attribute_category_id) REFERENCES attribute_category(id),
     FOREIGN KEY (attribute_type_id) REFERENCES attribute_type(id)
 );
-SELECT * FROM product_attribute;
 
--- Attribute Category Table
-CREATE TABLE attribute_category (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
-);
-SELECT * FROM attribute_category;
-
--- Attribute Type Table
-CREATE TABLE attribute_type (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(50) NOT NULL
-);
-SELECT * FROM attribute_type;
+INSERT INTO product_attribute (product_item_id, attribute_category_id, attribute_type_id, value) VALUES 
+(1, 1, 1, 'Rubber Sole'),
+(2, 2, 2, '250');
