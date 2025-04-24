@@ -3,6 +3,7 @@ E-COMMERCE DATABASE
 This database is designed to support a fully functional e-commerce platform with a flexible and scalable structure. It covers essential features required to manage products, categories, variations, and attributes, ensuring a smooth online shopping experience.
 
 Key Features
+
 Product Management: Store details about each product including name, base price, brand, and category.
 
 Product Variations: Support multiple variations like size and color for each product using the product_variation table.
